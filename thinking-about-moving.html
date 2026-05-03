@@ -1,0 +1,443 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Thinking About Moving — Luke</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,800&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1f2a44; --soft:#7a8499; --paper:#fff;
+    --bg:#fdf6ee;
+    --coral:#ff7b6b; --peach:#ffb38a; --teal:#2bb3a3; --navy:#1f2a44;
+    --sun:#ffd166; --lilac:#b8a4e3; --mint:#9fe7d1;
+    --line:#f0e7da;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Outfit',-apple-system,sans-serif;
+    background:var(--bg);color:var(--ink);
+    overflow:hidden;-webkit-font-smoothing:antialiased;
+  }
+
+  /* floating background houses */
+  .sky{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none}
+  .float{position:absolute;opacity:.10;animation:drift linear infinite}
+  @keyframes drift{from{transform:translateY(0) rotate(0)}to{transform:translateY(-120vh) rotate(8deg)}}
+  .float svg{display:block}
+
+  .deck{height:100vh;height:100dvh;position:relative;z-index:1}
+  .slide{
+    position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+    padding:7vh 9vw;opacity:0;transform:translateY(30px) scale(.98);pointer-events:none;
+    transition:opacity .55s ease,transform .65s cubic-bezier(.34,1.3,.5,1);
+  }
+  .slide.on{opacity:1;transform:none;pointer-events:auto}
+  .slide.on .pop{animation:pop .7s cubic-bezier(.34,1.5,.5,1) backwards}
+  .slide.on .pop:nth-child(1){animation-delay:.1s}.slide.on .pop:nth-child(2){animation-delay:.22s}.slide.on .pop:nth-child(3){animation-delay:.34s}
+  @keyframes pop{from{opacity:0;transform:translateY(18px) scale(.92)}to{opacity:1;transform:none}}
+
+  .slide.dark{background:linear-gradient(135deg,#2a3655 0%,#1f2a44 100%);color:#fff}
+  .slide.dark .soft{color:#b6c0d4}
+
+  h1{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(2.4rem,5.6vw,4.6rem);line-height:1.04;letter-spacing:-.015em;margin-bottom:.45em}
+  h2{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.9rem,3.8vw,3.1rem);line-height:1.12;margin-bottom:.3em}
+  .kicker{font-size:.82rem;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--teal);margin-bottom:1.1em}
+  .dark .kicker{color:var(--sun)}
+  .sub{font-size:clamp(1rem,1.5vw,1.2rem);color:var(--soft);margin-bottom:2em;max-width:52ch}
+  p{font-size:clamp(1.05rem,1.5vw,1.22rem);line-height:1.6;max-width:60ch;margin-bottom:1em;font-weight:300}
+  b,strong{font-weight:600}
+  .soft{color:var(--soft)}
+
+  .row{display:flex;gap:1.6rem;align-items:stretch;flex-wrap:wrap}
+  .col{flex:1;min-width:13rem}
+
+  .card{
+    background:var(--paper);border-radius:20px;padding:1.5rem 1.6rem;position:relative;
+    box-shadow:0 8px 24px -12px rgba(31,42,68,.18),0 2px 4px rgba(31,42,68,.05);
+    border:2px solid transparent;
+  }
+  .card.roof::before{
+    content:"";position:absolute;top:-14px;left:50%;transform:translateX(-50%);
+    border-left:18px solid transparent;border-right:18px solid transparent;
+    border-bottom:14px solid var(--paper);filter:drop-shadow(0 -2px 2px rgba(0,0,0,.06));
+  }
+  .card.coral{background:linear-gradient(145deg,var(--coral),#ff6254);color:#fff}
+  .card.coral .lbl{color:#ffe1dc}
+  .card.coral.roof::before{border-bottom-color:var(--coral)}
+  .card.teal{border-color:var(--teal);box-shadow:0 8px 24px -10px rgba(43,179,163,.35)}
+  .card.sun{background:linear-gradient(145deg,#fff6e0,#fff)}
+
+  .stat{display:flex;flex-direction:column;gap:.35rem;margin-bottom:1rem}
+  .stat:last-child{margin-bottom:0}
+  .lbl{font-size:.8rem;letter-spacing:.04em;color:var(--soft);font-weight:500}
+  .num{font-family:'Fraunces',serif;font-weight:700;font-size:clamp(1.6rem,2.6vw,2.2rem);line-height:1;font-variant-numeric:tabular-nums}
+  .num.huge{font-size:clamp(2.6rem,5vw,3.8rem)}
+  .num.coral{color:var(--coral)}.num.teal{color:var(--teal)}.num.navy{color:var(--navy)}.num.sun{color:#e0a800}
+
+  .pill{display:inline-flex;align-self:flex-start;align-items:center;gap:.5em;padding:.45em 1em;border-radius:999px;font-size:.85rem;font-weight:600;letter-spacing:.04em;color:#fff;margin-bottom:1.1em;box-shadow:0 4px 12px -4px rgba(0,0,0,.2)}
+  .pc{list-style:none;display:flex;flex-direction:column;gap:.55rem;font-size:.98rem}
+  .pc li{display:flex;gap:.6rem;align-items:flex-start;line-height:1.45;font-weight:300}
+  .pc li::before{content:"";flex:0 0 .5rem;height:.5rem;border-radius:50%;margin-top:.45rem}
+  .pc.for li::before{background:var(--teal)} .pc.against li::before{background:var(--coral)}
+  .pc-head{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:.7rem}
+  .pc-head.for{color:var(--teal)} .pc-head.against{color:var(--coral)}
+  .pill svg{width:1.1em;height:1.1em}
+  .pill.a{background:#9aa3b5}.pill.b{background:var(--coral)}.pill.c{background:var(--lilac)}.pill.d{background:var(--teal)}
+
+  table{width:100%;border-collapse:separate;border-spacing:0 .45rem;font-size:clamp(.9rem,1.3vw,1.05rem)}
+  th,td{padding:.85em 1.1em;text-align:left}
+  th{font-weight:600;font-size:.82em;letter-spacing:.06em;color:var(--sun);text-transform:uppercase}
+  tbody tr{background:rgba(255,255,255,.06)}
+  tbody td:first-child{color:#9fb0c9;font-weight:500;border-radius:10px 0 0 10px}
+  tbody td:last-child{border-radius:0 10px 10px 0}
+
+  .foot{position:absolute;bottom:5vh;left:9vw;right:9vw;font-size:.95rem;color:var(--soft)}
+  .dark .foot{color:#b6c0d4}
+
+  /* progress: a tiny moving van travels along the bottom */
+  .road{position:fixed;bottom:2.2rem;left:10vw;right:10vw;height:3px;background:repeating-linear-gradient(90deg,var(--line) 0 14px,transparent 14px 24px);z-index:9;border-radius:2px}
+  .van{position:absolute;bottom:-2px;left:0;transition:left .6s cubic-bezier(.34,1.3,.5,1);font-size:1.6rem;transform:scaleX(-1);filter:drop-shadow(0 2px 3px rgba(0,0,0,.15))}
+  .van::after{content:"🚚"}
+  .marker{position:absolute;top:-18px;font-size:1.1rem;transform:translateX(-50%)}
+
+  .arrow{position:fixed;top:50%;transform:translateY(-50%);width:3.2rem;height:3.2rem;border-radius:50%;
+    background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:1.4rem;user-select:none;z-index:10;transition:.2s;box-shadow:0 6px 16px -6px rgba(31,42,68,.4)}
+  .arrow:hover{transform:translateY(-50%) scale(1.1);background:var(--coral)}
+  .arrow.l{left:1.4rem}.arrow.r{right:1.4rem}
+  .hint{position:fixed;top:1.4rem;right:1.8rem;font-size:.78rem;color:var(--soft);z-index:10}
+
+  /* cover doodles */
+  .hero-house{position:absolute;right:7vw;bottom:10vh;width:min(32vw,360px);opacity:.95;animation:bob 6s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+  .key{position:absolute;animation:spin 14s linear infinite;opacity:.5}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media(max-width:780px){
+    .slide{padding:6vh 7vw}.row{gap:1rem}.hero-house{display:none}
+    .arrow{width:2.5rem;height:2.5rem;font-size:1.1rem}.hint{display:none}
+    .road{left:6vw;right:6vw}
+  }
+</style>
+</head>
+<body>
+
+<!-- floating background houses -->
+<div class="sky" id="sky"></div>
+
+<div class="deck">
+
+<!-- 1 · Cover -->
+<section class="slide dark on">
+  <div class="kicker">For Mum &amp; Dad</div>
+  <h1>Thinking About<br>Moving <span style="display:inline-block;animation:bob 3s ease-in-out infinite">🏠</span></h1>
+  <p class="sub" style="color:#cdd6e6">Where I am, and the four options on the table.</p>
+  <div class="foot">Luke · May 2026 · <span style="opacity:.7">use the arrows →</span></div>
+  <svg class="hero-house" viewBox="0 0 200 200">
+    <polygon points="100,30 175,95 25,95" fill="#ff7b6b"/>
+    <rect x="45" y="95" width="110" height="80" rx="6" fill="#ffd166"/>
+    <rect x="88" y="130" width="28" height="45" rx="3" fill="#1f2a44"/>
+    <rect x="56" y="110" width="22" height="22" rx="3" fill="#9fe7d1"/>
+    <rect x="124" y="110" width="22" height="22" rx="3" fill="#9fe7d1"/>
+    <circle cx="111" cy="153" r="2" fill="#ffd166"/>
+    <rect x="92" y="50" width="14" height="30" fill="#2bb3a3"/>
+  </svg>
+  <svg class="key" style="top:14vh;left:12vw;width:42px" viewBox="0 0 24 24" fill="#ffd166"><path d="M7 14a5 5 0 1 1 4.9-6H21v4h-2v3h-4v-3h-3.1A5 5 0 0 1 7 14zm0-2a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/></svg>
+</section>
+
+<!-- 2 · Where I am now -->
+<section class="slide">
+  <div class="kicker">Five years in Brockley</div>
+  <h2>Where I am now</h2>
+  <div class="row">
+    <div class="col pop">
+      <p>It's been a good first home, but it's small — one bedroom, no balcony, no garden.</p>
+      <p>I'm ready for somewhere with more space, some green around me, and a shorter trip into work.</p>
+    </div>
+    <div class="col pop">
+      <div class="card roof sun">
+        <div class="stat"><span class="lbl">What it's worth today</span><span class="num navy">~ £400,000</span></div>
+        <div class="stat"><span class="lbl">What I still owe on it</span><span class="num">£282,000</span></div>
+        <div class="stat"><span class="lbl">My share (the equity)</span><span class="num teal">~ £118,000</span></div>
+        <div class="stat"><span class="lbl">Monthly mortgage</span><span class="num">£1,345</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · Option A — Stay -->
+<section class="slide">
+  <span class="pill a">🛋️ Option A</span>
+  <h2>Stay put</h2>
+  <p class="sub">Do nothing — keep living in Brockley.</p>
+  <div class="row">
+    <div class="col pop">
+      <p>By far the <b>cheapest</b> option — £1,345 a month, and a chunk of that is paying down the mortgage rather than disappearing.</p>
+      <p>No fees, no stamp duty, no upheaval.</p>
+      <p>The cost is the one that doesn't show up on a bank statement: another few years in a small one-bed with no outdoor space, a long commute, and an area I've outgrown.</p>
+    </div>
+    <div class="col pop" style="max-width:16rem">
+      <div class="card roof">
+        <div class="stat"><span class="lbl">Monthly</span><span class="num teal">£1,345</span></div>
+        <div class="stat"><span class="lbl">One-off cost</span><span class="num teal">£0</span></div>
+        <div class="stat"><span class="lbl">Own a home?</span><span class="num">Yes — this one</span></div>
+        <div class="stat"><span class="lbl">5-year cost vs staying</span><span class="num teal">£0</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 · Option B -->
+<section class="slide">
+  <span class="pill b">🔑 Option B</span>
+  <h2>Keep the flat and rent it out</h2>
+  <p class="sub">The obvious idea — let a tenant cover it while I rent somewhere new. Here's why it doesn't work.</p>
+  <div class="row">
+    <div class="col card roof pop"><div class="stat"><span class="lbl">Rent coming in</span><span class="num huge teal" data-count="1550">£0</span><span class="lbl">per month from a tenant</span></div></div>
+    <div class="col card roof pop"><div class="stat"><span class="lbl">What goes out</span><span class="num huge coral" data-count="2050">£0</span><span class="lbl">mortgage, agent, insurance, repairs, tax</span></div></div>
+    <div class="col card roof coral pop" style="max-width:12rem"><div class="stat"><span class="lbl">So I'd lose</span><span class="num huge">~£500</span><span class="lbl">every month</span></div></div>
+  </div>
+  <p style="margin-top:1.6em">After 12 months the lender forces me onto a <b>more expensive landlord mortgage</b> — so it gets worse. With my own rent on top: <b style="color:var(--coral)">~£2,750/month</b> all in. Over five years that's roughly <b style="color:var(--coral)">£105,000 worse off</b> than staying put.</p>
+</section>
+
+<!-- 3b · Option A — where the £2,050 goes -->
+<section class="slide">
+  <span class="pill b">🔑 Option B · the detail</span>
+  <h2>Where that £2,050 actually goes</h2>
+  <p class="sub">A quick breakdown of the monthly outgoings if I let the flat.</p>
+  <div class="row">
+    <div class="col pop" style="max-width:30rem">
+      <div class="card">
+        <div class="ledger">
+          <div><span>Mortgage payment</span><b>£1,345</b></div>
+          <div><span>Lender's "consent to let" surcharge <em>(they add ~1%)</em></span><b>~£200</b></div>
+          <div><span>Letting agent <em>(12% + VAT)</em></span><b>~£185</b></div>
+          <div><span>Insurance, safety checks, repairs</span><b>~£100</b></div>
+          <div><span>Tax on the rent <em>(at my rate)</em></span><b>~£220</b></div>
+          <div class="total"><span>Going out each month</span><b class="num coral">~£2,050</b></div>
+          <div class="total in"><span>Coming in from tenant</span><b class="num teal">£1,550</b></div>
+          <div class="total loss"><span>So the flat costs me</span><b class="num" style="color:#fff">~£500 / month</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="col pop">
+      <p>And that's <b>year one</b>. After 12 months I'd have to switch to a proper landlord mortgage at a higher rate — the loss grows.</p>
+      <p>The lender also won't let me borrow that much against £1,550 of rent, so I might not even qualify without paying down a chunk of the mortgage first.</p>
+    </div>
+  </div>
+</section>
+<style>
+  .ledger{display:flex;flex-direction:column;gap:.55rem;font-size:1rem}
+  .ledger>div{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;padding:.3rem 0;border-bottom:1px dashed var(--line)}
+  .ledger span{font-weight:300;color:var(--ink)}
+  .ledger em{font-size:.82em;color:var(--soft);font-style:normal}
+  .ledger b{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .ledger .total{border-bottom:none;padding-top:.7rem;margin-top:.3rem;border-top:2px solid var(--ink)}
+  .ledger .total.in{border-top:1px solid var(--line);margin-top:0}
+  .ledger .total.loss{background:var(--coral);margin:.5rem -.8rem -.6rem;padding:.8rem .8rem;border-radius:0 0 14px 14px;border:none}
+  .ledger .total.loss span{color:#ffe1dc;font-weight:500}
+</style>
+
+<!-- 4 · The catch -->
+<section class="slide">
+  <div class="kicker">The mortgage penalty</div>
+  <h2>So I need to sell — but there's a catch</h2>
+  <p class="sub">My mortgage deal runs to 2029. Leaving early means a fee.</p>
+  <div class="row">
+    <div class="col card roof pop"><div class="stat"><span class="lbl">Sell now</span><span class="num huge coral" data-count="14100">£0</span><span class="lbl">5% penalty</span></div></div>
+    <div class="col card roof pop"><div class="stat"><span class="lbl">Wait until July 2027</span><span class="num huge navy" data-count="8300">£0</span><span class="lbl">drops to 3%</span></div></div>
+    <div class="col card roof teal pop"><div class="stat"><span class="lbl">Move the mortgage to a new home</span><span class="num huge teal">£0</span><span class="lbl">no penalty 🎉</span></div></div>
+  </div>
+  <p class="soft" style="margin-top:1.6em;font-style:italic">Which leaves the two real ways forward.</p>
+</section>
+
+<!-- Option C -->
+<section class="slide">
+  <span class="pill c">📦 Option C</span>
+  <h2>Sell the flat and rent</h2>
+  <p class="sub">Maximum flexibility — fresh start straight away.</p>
+  <div class="row">
+    <div class="col pop">
+      <p>Walk away with about <b style="color:var(--navy)">£96,000–£104,000 in the bank</b>, depending on whether I go now or next summer.</p>
+      <p>Rent somewhere modern — outdoor space, gym, parking — for around <b style="color:var(--navy)">£2,250 a month</b>.</p>
+      <p>Easy to move again if life changes. But rent is just gone each month — and if I bought again later I'd pay stamp duty <i>on top of</i> the penalty, so it can end up costing twice.</p>
+    </div>
+    <div class="col pop" style="max-width:16rem">
+      <div class="card roof">
+        <div class="stat"><span class="lbl">Monthly</span><span class="num navy">£2,250</span></div>
+        <div class="stat"><span class="lbl">Penalty fee</span><span class="num coral">£8k–£14k</span></div>
+        <div class="stat"><span class="lbl">Cash freed up</span><span class="num">~£100k</span></div>
+        <div class="stat"><span class="lbl">5-year cost vs staying</span><span class="num coral">~£95k–£125k</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Option D -->
+<section class="slide">
+  <span class="pill d">🏡 Option D</span>
+  <h2>Sell and buy somewhere bigger</h2>
+  <p class="sub">Move my mortgage across to the new place — no penalty fee at all.</p>
+  <div class="row">
+    <div class="col pop">
+      <p>Because I'm moving the mortgage rather than ending it, <b style="color:var(--teal)">the £14,000 penalty disappears</b>.</p>
+      <p>Put my Brockley equity down as a deposit and buy at around <b>£550,000</b> — a proper two-bed with a balcony, parking and a gym, somewhere greener.</p>
+      <p>Monthly is about <b>£2,200</b> — almost the same as renting — but it's going into something I own.</p>
+    </div>
+    <div class="col pop" style="max-width:16rem">
+      <div class="card roof teal">
+        <div class="stat"><span class="lbl">Monthly</span><span class="num navy">~£2,200</span></div>
+        <div class="stat"><span class="lbl">Penalty fee</span><span class="num teal">£0</span></div>
+        <div class="stat"><span class="lbl">Stamp duty</span><span class="num">~£17,500</span></div>
+        <div class="stat"><span class="lbl">5-year cost vs staying</span><span class="num navy">~£47k</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- D — for & against -->
+<section class="slide">
+  <span class="pill d">🏡 Option D · for &amp; against</span>
+  <h2>Sell &amp; buy — the case each way</h2>
+  <div class="row">
+    <div class="col card pop">
+      <div class="pc-head for">For</div>
+      <ul class="pc for">
+        <li><b>£0 penalty</b> — the £14k disappears because the mortgage moves with me</li>
+        <li>~£2,700/mo goes into <b>something I own</b>, not a landlord</li>
+        <li>£650k asset working for me — at 4%/yr that's <b>~£312k of gain over 10 years</b></li>
+        <li>One home, one mortgage, one set of bills — clean</li>
+        <li>Out of Brockley now, into the spec I actually want</li>
+      </ul>
+    </div>
+    <div class="col card pop">
+      <div class="pc-head against">Against</div>
+      <ul class="pc against">
+        <li>~<b>£30k to transact</b> (stamp duty ~£20k + agent &amp; legal ~£10k) — sunk if I move again soon</li>
+        <li>Committed to a place — if life sends me abroad in 18 months I'm selling into whatever the market's doing</li>
+        <li>Chain risk: sale and purchase have to line up</li>
+        <li>Leverage cuts both ways — a 10% dip is ~£65k off on paper</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- B — for & against -->
+<section class="slide">
+  <span class="pill b">🔑 Option B · for &amp; against</span>
+  <h2>Rent it out &amp; rent — the case each way</h2>
+  <div class="row">
+    <div class="col card pop">
+      <div class="pc-head for">For</div>
+      <ul class="pc for">
+        <li><b>No transaction costs</b>, no stamp duty, no chain — could be in a new flat in 6 weeks</li>
+        <li>Keeps the Brockley asset, so I still get growth on £400k</li>
+        <li><b>Fully reversible</b> — give the tenant notice, move back in</li>
+        <li>Haven't bet £650k on one area before I've lived there</li>
+      </ul>
+    </div>
+    <div class="col card pop">
+      <div class="pc-head against">Against</div>
+      <ul class="pc against">
+        <li><b>Loses ~£500/month</b> at my tax rate — I'm subsidising a tenant</li>
+        <li>Highest monthly of any option (~£2,750 all in)</li>
+        <li>Lender allows it for <b>12 months only</b> — then a pricier landlord mortgage I might not qualify for</li>
+        <li>I become a landlord: voids, repairs, certificates, disputes</li>
+        <li>Each year let chips away at my tax-free gain when I do sell</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 7 · Side by side -->
+<section class="slide dark">
+  <div class="kicker">All together</div>
+  <h2>Side by side</h2>
+  <table>
+    <thead><tr><th></th><th>A · Stay</th><th>B · Rent it out</th><th>C · Sell &amp; rent</th><th>D · Sell &amp; buy</th></tr></thead>
+    <tbody>
+      <tr class="pop"><td>Monthly</td><td>£1,345</td><td>~£2,750</td><td>£2,250</td><td>~£2,200</td></tr>
+      <tr class="pop"><td>One-off cost</td><td>—</td><td>—</td><td>£8k–£14k penalty</td><td>~£17.5k stamp duty</td></tr>
+      <tr class="pop"><td>Own a home</td><td>This one</td><td>As a landlord</td><td>No</td><td>A nicer one</td></tr>
+      <tr class="pop"><td>The catch</td><td>Nothing changes</td><td>Loses money monthly</td><td>Penalty + duty later</td><td>Committing to a place</td></tr>
+      <tr class="pop"><td>How I'd feel</td><td>Same as now</td><td>Stretched, tied down</td><td>Free, but paying for it</td><td>Settled — fresh start</td></tr>
+      <tr class="pop" style="font-weight:600"><td style="color:var(--sun)">5-yr cost vs A</td><td>—</td><td style="color:var(--coral)">~£105k</td><td style="color:var(--peach)">~£95k–£125k</td><td style="color:var(--mint)">~£47k</td></tr>
+    </tbody>
+  </table>
+  <p style="max-width:none;text-align:center;font-weight:600;font-size:1.35rem;margin-top:1.2em">I'm leaning towards D.</p>
+</section>
+
+</div>
+
+<!-- progress road -->
+<div class="road" id="road"><div class="van" id="van"></div></div>
+
+<div class="arrow l" id="prev">‹</div>
+<div class="arrow r" id="next">›</div>
+<div class="hint">← → or space</div>
+
+<script>
+// floating background houses
+(function(){
+  const sky=document.getElementById('sky');
+  const cols=['#ff7b6b','#2bb3a3','#ffd166','#b8a4e3','#9fe7d1'];
+  for(let k=0;k<14;k++){
+    const d=document.createElement('div');d.className='float';
+    const s=24+Math.random()*40;
+    d.style.left=(Math.random()*100)+'vw';
+    d.style.bottom=(-10-Math.random()*100)+'vh';
+    d.style.animationDuration=(28+Math.random()*30)+'s';
+    d.style.animationDelay=(-Math.random()*40)+'s';
+    const c=cols[k%cols.length];
+    d.innerHTML=`<svg width="${s}" height="${s}" viewBox="0 0 24 24"><path fill="${c}" d="M12 3l9 8h-2v9H5v-9H3l9-8zm0 2.7L7 10v8h10v-8l-5-4.3z"/></svg>`;
+    sky.appendChild(d);
+  }
+})();
+
+const slides=[...document.querySelectorAll('.slide')];
+const road=document.getElementById('road'),van=document.getElementById('van');
+let i=0;
+
+// place house markers along the road
+slides.forEach((_,k)=>{
+  const m=document.createElement('div');m.className='marker';
+  m.style.left=(k/(slides.length-1)*100)+'%';
+  m.textContent=k===0?'🏚️':k===slides.length-1?'🏡':'·';
+  road.appendChild(m);
+});
+
+function countUp(el){
+  const target=+el.dataset.count;if(!target)return;
+  const t0=performance.now(),dur=900;
+  function step(t){
+    const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent='£'+Math.round(target*e).toLocaleString();
+    if(p<1)requestAnimationFrame(step);else el.textContent=(target>=2000?'~£':'£')+target.toLocaleString();
+  }
+  requestAnimationFrame(step);
+}
+
+function go(n){
+  n=Math.max(0,Math.min(slides.length-1,n));if(n===i)return;
+  slides[i].classList.remove('on');i=n;slides[i].classList.add('on');
+  van.style.left=(i/(slides.length-1)*100)+'%';
+  slides[i].querySelectorAll('[data-count]').forEach(countUp);
+}
+slides[0].querySelectorAll('[data-count]').forEach(countUp);
+
+document.getElementById('next').onclick=()=>go(i+1);
+document.getElementById('prev').onclick=()=>go(i-1);
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1)}
+  if(e.key==='ArrowLeft')go(i-1);
+});
+let tx=0;
+document.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>50)go(i+(dx<0?1:-1))});
+</script>
+</body>
+</html>
